@@ -1,0 +1,11 @@
+{
+  "name": "field-read",
+  "displayName": "Field Read",
+  "version": "0.1.0",
+  "description": "Read a whole field, or compare two, from the public record over a 2 to 5 year horizon: seven lanes, three dated scenarios with falsifiers, every claim marked cited, inferred or unknown.",
+  "author": { "name": "Ahmed Mohamed", "url": "https://github.com/me2resh/field-read" },
+  "homepage": "https://me2resh.github.io/field-read/",
+  "repository": "https://github.com/me2resh/field-read",
+  "license": "MIT",
+  "keywords": ["industry research", "foresight", "outside view", "career decision", "scenarios", "base rates", "job boards"]
+}

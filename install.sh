@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Install Field Read into an agent's skills directory (for agents that do not use Claude Code plugins).
+# Claude Code users: /plugin marketplace add me2resh/field-read, then /plugin install field-read@field-read
+# Usage: ./install.sh [claude|codex|all|<directory>]
+# Any agent that supports the Agent Skills format (a folder with SKILL.md) can use the same folder:
+# point it at the folder, or copy the folder into that agent's skills directory.
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+TARGET="${1:-all}"
+copy() { mkdir -p "$1"; rm -rf "$1/field-read"; mkdir -p "$1/field-read"; cp -R "$HERE/skills/field-read/." "$1/field-read/"; echo "installed: $1/field-read"; }
+if [ "$TARGET" != "claude" ] && [ "$TARGET" != "codex" ] && [ "$TARGET" != "all" ]; then
+  case "$TARGET" in
+    */*|.|..|~*) ;;   # looks like a path
+    *) echo "Unknown target '$TARGET'. Usage: ./install.sh [claude|codex|all|/path/to/agent/skills]" >&2; exit 2 ;;
+  esac
+  [ -d "$(dirname "$TARGET")" ] || { echo "Parent folder of '$TARGET' does not exist." >&2; exit 2; }
+fi
+case "$TARGET" in
+  claude) copy "$HOME/.claude/skills" ;;
+  codex)  copy "$HOME/.codex/skills" ;;
+  all)    copy "$HOME/.claude/skills"; copy "$HOME/.codex/skills" ;;
+  *)      copy "$TARGET" ;;
+esac
+cat <<'MSG'
+Cursor: copy .cursor/rules/field-read.mdc into your project's .cursor/rules/ (or the whole folder into ~/.cursor/skills/ if your version supports skills).
+Copilot: copy .github/copilot-instructions.md into your project, or append its text to yours.
+Other agents: add the AGENTS.md text to your agent's instructions file and keep skills/field-read/ where the agent can read it.
+MSG

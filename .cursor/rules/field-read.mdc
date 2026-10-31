@@ -1,0 +1,8 @@
+---
+description: Field Read, a method for researching a whole field (an industry, a technology wave, a profession) from the public record over a 2 to 5 year horizon, or comparing two fields side by side, before a career, product or investment decision. Apply when the user asks where a field is going, whether one field beats another, or what a technology does to a kind of role.
+alwaysApply: false
+---
+
+Follow `skills/field-read/SKILL.md` in this repository (or wherever Field Read is installed). Read `skills/field-read/references/lanes.md` before running the seven lanes, `skills/field-read/references/sources.md` for endpoints and fallbacks, and `skills/field-read/references/outputs.md` for the layout: Skeleton A for one field, Skeleton B for a comparison.
+
+Rules: public record only. Mark every claim ✅ (cited, linked), 🟡 (inferred or from an unopened snippet) or ❔ (unknown). Never open a LinkedIn profile. Hype is a data point, not a finding. Record the base rate from the last three comparable shifts before writing any scenario. Every scenario carries dated confirming signals and one killing signal. Comparisons use the same horizon, lanes and depth on every field, and the reader's criteria are written before the lanes run. Keep inside knowledge in a separate marked section. Date everything. Write the answer first, then where the field is today, the base rate, the scenarios, the roles, the disagreements, what it means for the reader, dated signals, then sources by lane.

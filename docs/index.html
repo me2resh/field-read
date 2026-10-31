@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Field Read</title>
+<meta name="description" content="Read a whole field from the outside before you bet your next five years on it. An add-on for Claude Code, Codex and Cursor that reads seven places in the public record, records the base rate, and writes dated scenarios with falsifiers. Comparison of two fields is optional.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#e9edf0;--raised:#f6f8fa;--ink:#14202c;--muted:#5b6977;--rule:#c9d1d8;--rule-strong:#14202c;
+  --amber:#b4761a;--amber-ink:#fff;--green:#2e7a4e;--grey:#6e7781;--code:#dfe4e8;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0f161d;--raised:#16202a;--ink:#e6ebf0;--muted:#98a4b0;--rule:#2a3642;--rule-strong:#e6ebf0;
+  --amber:#e0a93a;--amber-ink:#14202c;--green:#6fcf8b;--grey:#9aa3ad;--code:#1b2631;
+}}
+:root[data-theme="dark"]{
+  --paper:#0f161d;--raised:#16202a;--ink:#e6ebf0;--muted:#98a4b0;--rule:#2a3642;--rule-strong:#e6ebf0;
+  --amber:#e0a93a;--amber-ink:#14202c;--green:#6fcf8b;--grey:#9aa3ad;--code:#1b2631;
+}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth}
+body{margin:0;overflow-x:clip;background:var(--paper);color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:17px;line-height:1.6}
+h1,h2,h3,.sans,table,button,.cta,nav,.tag{font-family:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif}
+.wrap{max-width:1080px;width:100%;margin:0 auto;padding:0 20px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:2px}
+
+nav{display:flex;justify-content:space-between;align-items:baseline;padding:22px 0 0;font-size:15px}
+nav .brand{font-weight:700;font-size:18px;text-decoration:none;letter-spacing:-.01em}
+nav ul{list-style:none;margin:0;padding:0;display:flex;gap:18px}
+nav a{text-decoration:none;color:var(--muted)}
+nav a:hover{color:var(--ink)}
+
+header{padding:64px 0 48px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:40px;align-items:start}
+h1{font-size:clamp(40px,8.5vw,84px);overflow-wrap:anywhere;line-height:.95;letter-spacing:-.035em;margin:0 0 20px;font-weight:700;font-variation-settings:"opsz" 96}
+.tag{font-size:19px;line-height:1.4;color:var(--muted);margin:0 0 26px;max-width:30ch}
+.cta a{display:inline-block;padding:12px 18px;border-radius:4px;text-decoration:none;font-weight:600;font-size:16px;margin:0 10px 10px 0;border:1.5px solid var(--rule-strong)}
+.cta a.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cta a.primary:hover{background:var(--amber);border-color:var(--amber);color:var(--amber-ink)}
+.cta a.quiet:hover{background:var(--raised)}
+
+/* the ledger: the page's one visual event */
+.ledger{border-top:2px solid var(--rule-strong);font-size:15px;line-height:1.4}
+.ledger .head{display:grid;grid-template-columns:1fr 1fr 44px;gap:14px;padding:10px 0 8px;color:var(--muted);font-weight:500;border-bottom:1px solid var(--rule)}
+.ledger .row{display:grid;grid-template-columns:1fr 1fr 44px;gap:14px;padding:12px 0;border-bottom:1px solid var(--rule);align-items:start}
+.ledger .said{font-family:"Source Serif 4",Georgia,serif;font-style:italic;font-size:16px}
+.ledger .did{font-size:15px}
+.ledger .when{display:block;color:var(--muted);font-size:13px;margin-top:2px;font-style:normal}
+.mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;font-weight:700;font-size:15px;font-family:"Bricolage Grotesque",sans-serif;border:1.5px solid currentColor;justify-self:end}
+.mark.ok{color:var(--green)}.mark.inf{color:var(--amber)}.mark.unk{color:var(--grey)}
+.ledger .cap{padding:10px 0 0;color:var(--muted);font-size:14px;font-family:"Bricolage Grotesque",sans-serif}
+.ledger .cap b{color:var(--ink);font-weight:600}
+@media (prefers-reduced-motion:no-preference){
+  .ledger .row .mark{opacity:0;transform:scale(1.6);animation:stamp .45s cubic-bezier(.2,.9,.3,1.2) forwards}
+  .ledger .row:nth-child(2) .mark{animation-delay:.5s}.ledger .row:nth-child(3) .mark{animation-delay:1s}.ledger .row:nth-child(4) .mark{animation-delay:1.5s}
+  @keyframes stamp{to{opacity:1;transform:scale(1)}}
+}
+
+section{padding:48px 0;border-top:1px solid var(--rule)}
+h2{font-size:30px;letter-spacing:-.02em;margin:0 0 8px;font-weight:600;line-height:1.1}
+.lead{margin:0 0 24px;max-width:62ch;color:var(--muted);font-size:17px}
+p{max-width:66ch}
+
+/* lanes as a ruled list */
+.lanes{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.lanes li{display:grid;grid-template-columns:200px 1fr 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--rule);font-size:15.5px}
+.lanes li b{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:16px}
+.lanes li span{color:var(--muted)}
+.lanes li em{font-style:normal}
+
+/* uses */
+.uses{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px;border-top:1px solid var(--rule)}
+.uses div{padding:18px 0;border-bottom:1px solid var(--rule)}
+.uses h3{margin:0 0 4px;font-size:20px;font-weight:600}
+.uses p{margin:0;font-size:16px}
+.uses p.q{font-style:italic;color:var(--ink)}
+.uses p.o{color:var(--muted);font-size:15px;margin-top:6px}
+
+/* example views */
+.tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--rule);margin:0 0 18px}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;color:var(--muted);padding:10px 14px 10px 0;margin-right:18px;cursor:pointer;font-size:15px;font-weight:500}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+.view{display:none}.view.on{display:block}
+.view h3{margin:22px 0 6px;font-size:18px;font-weight:600}
+.view p{margin:0 0 6px}
+table{width:100%;min-width:560px;border-collapse:collapse;font-size:14.5px;line-height:1.4}
+th,td{text-align:left;vertical-align:top;padding:9px 12px 9px 0;border-bottom:1px solid var(--rule)}
+th{color:var(--muted);font-weight:500}
+thead th{border-bottom:1px solid var(--rule-strong)}
+.scroll{overflow-x:auto}
+.m{font-family:"Bricolage Grotesque",sans-serif;font-weight:700;font-size:13px}
+.m.ok{color:var(--green)}.m.inf{color:var(--amber)}.m.unk{color:var(--grey)}
+.note{font-size:14px;color:var(--muted);font-family:"Bricolage Grotesque",sans-serif}
+ul.plain{padding-left:20px;margin:0}ul.plain li{margin:4px 0}
+
+
+/* sample reads as paper sheets: always light, like a page on a desk */
+.sheet{--p-ink:#14202c;--p-muted:#5b6977;--p-rule:#d7dde3;--p-rule-strong:#14202c;--p-green:#2e7a4e;--p-amber:#b4761a;--p-grey:#6e7781;
+  background:#fff;color:var(--p-ink);max-width:860px;padding:44px 52px 36px;border-radius:2px;box-shadow:0 1px 0 rgba(0,0,0,.06),0 12px 32px rgba(0,0,0,.18);font-family:"Source Serif 4",Georgia,serif;font-size:15.5px;line-height:1.55}
+.sheet .dochead{display:flex;justify-content:space-between;gap:20px;align-items:baseline;border-bottom:2px solid var(--p-rule-strong);padding-bottom:10px;margin-bottom:6px;font-family:"Bricolage Grotesque",sans-serif}
+.sheet .dochead b{font-size:19px;font-weight:600;letter-spacing:-.01em}
+.sheet .dochead span{color:var(--p-muted);font-size:13.5px;white-space:nowrap}
+.sheet .legend{color:var(--p-muted);font-size:13px;font-family:"Bricolage Grotesque",sans-serif;margin:0 0 6px}
+.sheet h3{margin:20px 0 6px;font-size:16.5px;font-weight:600;color:var(--p-ink)}
+.sheet p{margin:0 0 8px;max-width:none}
+.sheet table{font-size:13.5px;min-width:520px}
+.sheet th,.sheet td{border-bottom:1px solid var(--p-rule);padding:7px 10px 7px 0}
+.sheet th{color:var(--p-muted)}
+.sheet thead th{border-bottom:1px solid var(--p-rule-strong)}
+.sheet .m.ok{color:var(--p-green)}.sheet .m.inf{color:var(--p-amber)}.sheet .m.unk{color:var(--p-grey)}
+.sheet ul.plain{margin:0}
+.sheet .note{color:var(--p-muted)}
+.sheet sup{font-family:"Bricolage Grotesque",sans-serif;font-size:10px;color:var(--p-amber);margin-left:2px}
+.sheet a{color:#0f4c75;text-decoration:none}
+.sheet .docfoot{display:flex;justify-content:space-between;border-top:1px solid var(--p-rule);margin-top:26px;padding-top:10px;color:var(--p-muted);font-size:12.5px;font-family:"Bricolage Grotesque",sans-serif}
+.sheet .docfoot a{color:var(--p-ink)}
+@media (max-width:860px){.sheet{padding:26px 20px 22px}.sheet .dochead{flex-direction:column;gap:2px}.sheet .dochead span{white-space:normal}}
+
+/* install */
+.install{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+pre{background:var(--code);border-radius:6px;padding:14px 16px;overflow:auto;font-size:13.5px;line-height:1.5;margin:0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.ask{list-style:none;padding:0;margin:0;border-top:1px solid var(--rule)}
+.ask li{padding:10px 0;border-bottom:1px solid var(--rule);font-style:italic}
+
+/* rules */
+.rules{columns:2;column-gap:40px;margin:0;padding:0;list-style:none}
+.rules li{break-inside:avoid;padding:0 0 16px}
+.rules b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-weight:600;font-size:17px;margin-bottom:2px}
+.rules span{color:var(--muted);font-size:15.5px}
+
+footer{padding:36px 0 56px;color:var(--muted);font-size:14px;border-top:1px solid var(--rule);font-family:"Bricolage Grotesque",sans-serif}
+
+@media (max-width:860px){
+  header{grid-template-columns:1fr;gap:28px;padding:40px 0 36px}
+  .lanes li{grid-template-columns:1fr;gap:4px;padding:12px 0}
+  .uses,.install{grid-template-columns:1fr;gap:0}
+  .rules{columns:1}
+  nav ul{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav aria-label="Page">
+  <a class="brand" href="#">Field Read</a>
+  <ul><li><a href="#how">How it works</a></li><li><a href="#uses">Uses</a></li><li><a href="#compare">Comparisons</a></li><li><a href="#views">Example read</a></li><li><a href="#install">Install</a></li><li><a href="https://github.com/me2resh/field-read">GitHub</a></li></ul>
+</nav>
+
+<header>
+  <div>
+    <h1>Read a whole field from the outside.</h1>
+    <p class="tag">Before you bet the next five years on it. An add-on for Claude Code, Codex and Cursor that reads seven places in the public record, records the base rate, and writes dated scenarios that say what would prove them wrong.</p>
+    <div class="cta"><a class="primary" href="#install">Install</a><a class="quiet" href="#views">See the layout</a></div>
+  </div>
+  <div class="ledger" aria-label="Example of a scenario with its signals">
+    <div class="head"><span>Scenario: base case</span><span>Signal, and when it should be visible</span><span></span></div>
+    <div class="row"><div class="said">Headcount per shipped product falls; engineering leadership roles consolidate.<span class="when">Probability 45 to 60%, because the base rate from two earlier shifts says so</span></div><div class="did">Management-to-engineer ratio in 30 boards drops below 1:9.<span class="when">Visible by Q3 2027, applicant-tracking APIs</span></div><span class="mark ok" title="Cited">✓</span></div>
+    <div class="row"><div class="said">Incumbent platforms absorb the governance layer.<span class="when">Three of five say it; one has shipped it</span></div><div class="did">Two more ship it in their own product.<span class="when">Visible by June 2027, release notes</span></div><span class="mark inf" title="Inferred">~</span></div>
+    <div class="row"><div class="said">Regulation sets the pace, not the technology.<span class="when">Standards versions dated 2026 and 2027</span></div><div class="did">Procurement frameworks name the standard.<span class="when">Visible by 2028, tender documents</span></div><span class="mark unk" title="Unknown">?</span></div>
+    <div class="row"><div class="said">Killing signal.<span class="when">Named for every scenario</span></div><div class="did">Engineering headcount per product rises for two consecutive quarters across the sample.<span class="when">Checked quarterly</span></div><span class="mark ok" title="Cited">✓</span></div>
+    <div class="cap">Every line carries one of three marks. <b>✓</b> a source, read and linked. <b>~</b> inferred from the record. <b>?</b> not found. Sample field.</div>
+  </div>
+</header>
+
+<section id="how">
+  <h2>A field cannot hide its direction</h2>
+  <p class="lead">It is in where the money goes, what the job boards ask for, how fast the capability line moves and what it costs, what the largest players say against what they ship, what the regulators and standards bodies date, what happened the last three times, and where credible people still disagree. Field Read reads those seven places and writes one note: the answer first, then the evidence, the base rate, three dated scenarios, the roles that gain and lose, what it means for you, and the dates that would prove it wrong.</p>
+  <ul class="lanes">
+    <li><b>Capital</b><em>Where the money is going, at what stage and valuation; exits and failures. Money moves 18 to 36 months before headcount.</em><span>Funding databases, fund announcements, comparables and multiples, shutdown trackers, grants.</span></li>
+    <li><b>Labour</b><em>Which roles the field is hiring and has stopped hiring, where, at what seniority and pay. Job boards across the field are next year's org charts.</em><span>Applicant-tracking APIs across 15 to 30 named companies, layoff trackers, labour statistics, pay bands.</span></li>
+    <li><b>Capability curve</b><em>Where the technology line is, how fast it moves, and what one unit of work costs now against two years ago.</em><span>Releases, third-party benchmarks, pricing pages and their archives, open-source activity, field tests.</span></li>
+    <li><b>Incumbents</b><em>What the five largest players tell investors against what they ship, and which adjacent markets they enter. The gap is the platform risk for everyone smaller.</em><span>Earnings calls, shareholder letters, release notes, developer conferences, pricing changes.</span></li>
+    <li><b>Regulation and standards</b><em>The laws, safety standards, procurement rules and liability positions that set the pace more often than the technology does.</em><span>Legislation and consultations, standards bodies, enforcement pages, court records, insurer positions.</span></li>
+    <li><b>Base rates</b><em>What happened to the same roles and company types in the last three comparable shifts. Written before any scenario, and every scenario must respect it or say why this time differs.</em><span>Data-rich histories, labour series, funding and failure data, archived job boards, contemporaneous analyst notes.</span></li>
+    <li><b>Disagreement</b><em>Where credible, named people disagree, and what evidence would settle each dispute. Uncertainty is recorded, not averaged away.</em><span>Essays, papers, talks, dated forecasts. No LinkedIn profile is ever opened.</span></li>
+  </ul>
+</section>
+
+<section id="uses">
+  <h2>Four questions it is built for</h2>
+  <div class="uses">
+    <div><h3>Career</h3><p class="q">Is this a good field to move into, and which roles gain?</p><p class="o">Ten roles that gain and ten that lose, the hiring vocabulary, the gap between you and the gaining roles, three questions to answer before moving. Never "go" or "stay".</p></div>
+    <div><h3>Build</h3><p class="q">Where will the capability line be when my product ships, and who is moving in?</p><p class="o">The capability curve, the incumbents' says and does, kill criteria as dated signals.</p></div>
+    <div><h3>Invest</h3><p class="q">Where is the money going, and what does it expect back?</p><p class="o">Capital by quarter, comparables and multiples, the bull and the bear by name.</p></div>
+    <div><h3>Position</h3><p class="q">Where should a company stand in a moving field?</p><p class="o">The market map by scenario, the two or three dated events that change the ranking.</p></div>
+  </div>
+</section>
+
+<section id="compare">
+  <h2>Comparisons, when you want one</h2>
+  <p class="lead">A single field is the default. Ask for "A versus B" and the skill reads both fields with the same lanes, the same horizon and the same depth, and writes a second layout: your criteria first (written down before the lanes run, so they cannot drift to fit the answer), the fields side by side, scenarios per field, a criteria table with a mark in every cell, the cost of switching in each direction, the option value each field keeps, and the dated decision points. The honest result is often "A on criteria one to four, B on five to seven, and it turns on criterion three", with the signal that settles it.</p>
+  <ul class="plain">
+    <li>Same horizon on every field, or the note says which side is thinner and why.</li>
+    <li>The reader's weights are the reader's; the note never invents them.</li>
+    <li>Switching costs are written in both directions, because the field you already know always looks riskier.</li>
+  </ul>
+</section>
+
+<section id="views">
+  <h2>What a finished read looks like</h2>
+  <p class="lead">One fixed layout for a field, one for a comparison, each enforced by a checker: numbered sections, a mark on every claim, probabilities as ranges, every scenario with dated confirming signals and one killing signal, sources by lane. The first full sample read will be published here when it is done.</p>
+  <div class="tabs" role="tablist" data-group="v">
+    <button role="tab" aria-selected="true" data-v="field">One field</button>
+    <button role="tab" aria-selected="false" data-v="compare">Comparison</button>
+  </div>
+  <div class="view on" id="v-field">
+    <article class="sheet">
+      <div class="dochead"><b>&lt;Field&gt;: a field read</b><span>Read on D Month YYYY. Horizon N years</span></div>
+      <p class="legend">Public record only. No LinkedIn profile was opened. N footnotes across seven lanes. Layout only; the first sample is to follow.</p>
+      <h3>1. The answer in one paragraph</h3>
+      <h3>2. Where the field is today</h3>
+      <p class="note">2a Capital, by quarter and comparables. 2b Labour, by company and by role that appeared or disappeared. 2c The capability curve and cost per unit. 2d Incumbents, says and does. 2e Regulation and standards.</p>
+      <h3>3. The base rate</h3>
+      <p class="note">One table per past shift: what was predicted, what happened, how long it took. Then the roles across the shifts: kept, renamed, merged, gone.</p>
+      <h3>4. Three scenarios, dated</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Scenario</th><th>Probability (range)</th><th>Confirming signals, visible by</th><th>Killing signal</th></tr></thead>
+        <tr><td>4a Base</td><td><span class="m inf">inferred</span> range, one line why</td><td>two or three, each dated inside the horizon</td><td>one</td></tr>
+        <tr><td>4b Fast</td><td><span class="m inf">inferred</span></td><td>dated</td><td>one</td></tr>
+        <tr><td>4c Stall</td><td><span class="m inf">inferred</span></td><td>dated</td><td>one</td></tr>
+      </table></div>
+      <h3>5. Roles and company types</h3>
+      <p class="note">5a Ten that gain. 5b Ten that lose. Each with the lane that says so.</p>
+      <h3>6. Where credible people disagree</h3>
+      <h3>7. What it means for the reader</h3>
+      <p class="note">Removed from the shareable copy. For the career lens, ends with three questions to answer before moving.</p>
+      <h3>8. Signals to watch, dated</h3>
+      <h3>9. Sources by lane</h3>
+      <div class="docfoot"><span>Field Read</span><a href="https://github.com/me2resh/field-read/blob/main/skills/field-read/references/outputs.md">The full specification</a><span>Skeleton A</span></div>
+    </article>
+  </div>
+  <div class="view" id="v-compare">
+    <article class="sheet">
+      <div class="dochead"><b>&lt;Field A&gt; against &lt;Field B&gt;: a field read</b><span>Read on D Month YYYY. Horizon N years</span></div>
+      <p class="legend">Fields: A = ...; B = .... Depth: equal. Public record only. No LinkedIn profile was opened. Layout only; the first sample is to follow.</p>
+      <h3>1. The answer in one paragraph</h3>
+      <h3>2. The criteria</h3>
+      <p class="note">Five to eight rows, the reader's own weights, written and dated before the lanes run.</p>
+      <h3>3. The fields today, side by side</h3>
+      <p class="note">3a to 3e: the same five tables as a single read, one column block per field. Where one side is thinner, the row says so.</p>
+      <h3>4. The base rates</h3>
+      <h3>5. Scenarios, per field</h3>
+      <h3>6. Roles and company types, side by side</h3>
+      <h3>7. The criteria table</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Criterion</th><th>Field A</th><th>Field B</th><th>Which wins</th></tr></thead>
+        <tr><td>one row per criterion from section 2</td><td>marked, resting on a lane</td><td>marked, resting on a lane</td><td>a name, or "turns on &lt;signal&gt;"</td></tr>
+      </table></div>
+      <h3>8. Switching cost and option value</h3>
+      <p class="note">Cost of moving A to B. Cost of moving B to A. Option value kept by each. Sequencing.</p>
+      <h3>9. Where credible people disagree</h3>
+      <h3>10. What it means for the reader</h3>
+      <h3>11. Decision points, dated</h3>
+      <h3>12. Sources by lane and field</h3>
+      <div class="docfoot"><span>Field Read</span><a href="https://github.com/me2resh/field-read/blob/main/skills/field-read/references/outputs.md">The full specification</a><span>Skeleton B</span></div>
+    </article>
+  </div>
+</section>
+
+<section id="install">
+  <h2>Install it in your agent</h2>
+  <p class="lead">Pick your agent. Two minutes, no account.</p>
+  <div class="tabs" role="tablist" data-group="i">
+    <button role="tab" aria-selected="true" data-v="claude">Claude Code</button>
+    <button role="tab" aria-selected="false" data-v="codex">Codex</button>
+    <button role="tab" aria-selected="false" data-v="cursor">Cursor</button>
+    <button role="tab" aria-selected="false" data-v="copilot">GitHub Copilot</button>
+    <button role="tab" aria-selected="false" data-v="other">Other agents</button>
+  </div>
+  <div class="install">
+    <div>
+      <div class="view on" id="i-claude">
+        <p>One line, as a plugin. The skill then answers to <code>/field-read</code>.</p>
+<pre><code>/plugin install field-read --marketplace me2resh/field-read</code></pre>
+        <p class="note" style="margin-top:12px">Older versions: <code>/plugin marketplace add me2resh/field-read</code>, then <code>/plugin install field-read@field-read</code>. From a shell: <code>claude plugin install field-read --marketplace me2resh/field-read</code>. Update later with <code>/plugin update field-read@field-read</code>.</p>
+      </div>
+      <div class="view" id="i-codex">
+        <p>Codex reads skills from <code>~/.codex/skills</code>. The installer copies the folder there.</p>
+<pre><code>git clone https://github.com/me2resh/field-read
+cd field-read
+./install.sh codex</code></pre>
+        <p class="note" style="margin-top:12px">Inside a project, <code>AGENTS.md</code> in the repository is also written for Codex: copy its text into your project's <code>AGENTS.md</code> and keep <code>skills/field-read/</code> where Codex can read it.</p>
+      </div>
+      <div class="view" id="i-cursor">
+        <p>Cursor uses project rules. Copy the rule file into your project; it loads the skill when a task matches.</p>
+<pre><code>git clone https://github.com/me2resh/field-read
+mkdir -p .cursor/rules
+cp field-read/.cursor/rules/field-read.mdc .cursor/rules/
+cp -R field-read/skills/field-read .cursor/</code></pre>
+        <p class="note" style="margin-top:12px">The rule points at <code>skills/field-read/SKILL.md</code>; keep the copied folder next to it or adjust the path in the rule.</p>
+      </div>
+      <div class="view" id="i-copilot">
+        <p>Copilot reads repository instructions. Copy the instructions file and the skill folder into your project.</p>
+<pre><code>git clone https://github.com/me2resh/field-read
+mkdir -p .github
+cp field-read/.github/copilot-instructions.md .github/
+cp -R field-read/skills/field-read .github/</code></pre>
+        <p class="note" style="margin-top:12px">If your project already has <code>copilot-instructions.md</code>, append the text instead of replacing it.</p>
+      </div>
+      <div class="view" id="i-other">
+        <p>Any agent that reads a folder with a <code>SKILL.md</code>, or a plain instructions file, can use it.</p>
+<pre><code>git clone https://github.com/me2resh/field-read
+cd field-read
+./install.sh /path/to/your/agent/skills</code></pre>
+        <p class="note" style="margin-top:12px">For agents with a single instructions file, paste <code>AGENTS.md</code> into it and keep <code>skills/field-read/</code> readable by the agent.</p>
+      </div>
+    </div>
+    <div>
+      <p class="lead">Then ask the way you would ask a colleague.</p>
+      <ul class="ask">
+        <li>Field read industrial robotics software over three years. Career lens.</li>
+        <li>Compare platform engineering with physical AI as a place to spend the next three years.</li>
+        <li>What happens to engineering managers in 50 to 500 person software companies as coding agents mature?</li>
+        <li>Where is the money going in developer tools, and what does it expect back? Outside view only.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="rules">
+  <h2>Seven things it will not do</h2>
+  <ul class="rules">
+    <li><b>Go behind a login.</b><span>Filings, registries, press, job ads, public pages and APIs, benchmarks, archives. No scraping against terms, no pretexts.</span></li>
+    <li><b>State a claim without a mark.</b><span>Cited and linked, inferred from the record, or unknown after looking. Readers tell research from hype at a glance.</span></li>
+    <li><b>Repeat hype as a finding.</b><span>Funding totals, keynote claims and market-size figures go in with their source and their sponsor, never into the answer as facts about the field.</span></li>
+    <li><b>Forecast before the base rate.</b><span>No scenario is written until the last three comparable shifts are on the page. A forecast that disagrees with them has to say why.</span></li>
+    <li><b>Write a scenario without a falsifier.</b><span>Each one names the signals that confirm it, the date they should be visible, and the one signal that kills it.</span></li>
+    <li><b>Compare two fields unevenly.</b><span>Same horizon, same lanes, same depth, criteria written before the lanes run. If one side got less time, the note says so.</span></li>
+    <li><b>Open a LinkedIn profile.</b><span>A profile visit tells the person they are being researched. Public writing, talks and snippets instead.</span></li>
+  </ul>
+</section>
+
+<footer>Field Read is MIT licensed. <a href="https://github.com/me2resh/field-read">Source on GitHub</a>. Sibling of <a href="https://me2resh.github.io/cold-read/">Cold Read</a>, which reads one company. The fields on this page are samples; the method, the sources and the marks are what you get.</footer>
+</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(t){var g=t.dataset.group;t.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){
+  t.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-selected','false')});
+  document.querySelectorAll('[id^="'+g+'-"].view').forEach(function(v){v.classList.remove('on')});
+  b.setAttribute('aria-selected','true');document.getElementById(g+'-'+b.dataset.v).classList.add('on');
+});});});
+</script>
+</body>
+</html>
