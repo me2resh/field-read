@@ -55,11 +55,12 @@ def main():
         pos = max(pos, i)
 
     # scenarios: probability range, dated confirming signals, a killing signal
-    scen_heads = [i for i, l in enumerate(lines) if re.match(r"^###\s+(4[abc]\.|5[ab]\.)", l)]
+    pat = r"^###\s+5[ab]\." if shape == "compare" else r"^###\s+4[abc]\."
+    scen_heads = [i for i, l in enumerate(lines) if re.match(pat, l)]
     for n, start in enumerate(scen_heads):
         end = scen_heads[n + 1] if n + 1 < len(scen_heads) else next((i for i in range(start + 1, len(lines)) if re.match(r"^## ", lines[i])), len(lines))
         block = "\n".join(lines[start:end])
-        if shape == "field" or re.match(r"^###\s+5[ab]\.", lines[start]):
+        if True:
             probs = len(re.findall(r"Probability \(range\)", block)); kills = len(re.findall(r"Killing signal:", block)); dates = len(re.findall(r"visible by \d", block))
             need = 3 if shape == "compare" else 1
             if probs < need: fails.append(f"'{lines[start].strip()}': {probs} 'Probability (range)' line(s), need {need}")
