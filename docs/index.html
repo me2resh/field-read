@@ -161,13 +161,13 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:14px;border-top:1px soli
     <p class="tag">Before you bet the next five years on it. An add-on for Claude Code, Codex and Cursor that reads seven places in the public record, records the base rate, and writes dated scenarios that say what would prove them wrong.</p>
     <div class="cta"><a class="primary" href="#install">Install</a><a class="quiet" href="#views">See the layout</a></div>
   </div>
-  <div class="ledger" aria-label="What every scenario must carry">
-    <div class="head"><span>What every scenario carries</span><span>Why the rule exists</span><span></span></div>
-    <div class="row"><div class="said">A probability as a range, with the one-line reason.<span class="when">Marked inferred, never a bare number</span></div><div class="did">A point estimate hides the uncertainty. A range with a reason can be argued with.<span class="when">Rule from the skill</span></div><span class="mark inf" title="Inferred">~</span></div>
-    <div class="row"><div class="said">Two or three confirming signals, each with a date inside the horizon and a place to check.<span class="when">Job boards, release notes, filings, standards</span></div><div class="did">A scenario you cannot check on a date is an opinion.<span class="when">Rule from the skill</span></div><span class="mark ok" title="Cited">✓</span></div>
-    <div class="row"><div class="said">One killing signal.<span class="when">Named before the scenario is written</span></div><div class="did">The author says in advance what would prove them wrong.<span class="when">Rule from the skill</span></div><span class="mark ok" title="Cited">✓</span></div>
-    <div class="row"><div class="said">The base rate it respects, or the reason this time differs.<span class="when">From the last three comparable shifts</span></div><div class="did">Forecasts that ignore what happened last time are the ones that age worst.<span class="when">Lane 6, written first</span></div><span class="mark unk" title="Unknown">?</span></div>
-    <div class="cap">Every claim in a finished read carries one of three marks. <b>✓</b> a source, read and linked. <b>~</b> inferred from the record. <b>?</b> not found after looking. The first full read will appear here when it is done.</div>
+  <div class="ledger" aria-label="A scenario from the first read">
+    <div class="head"><span>Scenario 5a, base case, from the first read</span><span>Signal, where to check it, and by when</span><span></span></div>
+    <div class="row"><div class="said">Software engineering leadership is reorganised, not emptied. Titles change; authority moves to whoever owns specification, evaluation, permissions and release evidence.<span class="when">Probability 50 to 65%, because three prior shifts went this way and the 2026 evidence matches a reorganisation</span></div><div class="did">Management share of engineering ads in the sampled boards stays between 5% and 10%.<span class="when">Applicant-tracking APIs, visible by 31 October 2027</span></div><span class="mark ok" title="Cited">✓</span></div>
+    <div class="row"><div class="said">US systems administrators grew from 327,850 in 2008 to 376,820 in 2016, the base rate the scenario rests on.<span class="when">Bureau of Labor Statistics, read 31 October 2026</span></div><div class="did">Two or more platforms ship approval, evidence and rule-version features as bundled parts.<span class="when">Release notes, visible by 30 June 2027</span></div><span class="mark ok" title="Cited">✓</span></div>
+    <div class="row"><div class="said">Experienced maintainers were 19% slower with early-2025 tools in a randomised study; merged agent pull requests carried 1.62 times the odds of a later fix.<span class="when">METR, February 2026; Deakin study, September 2026</span></div><div class="did">A matched-cohort study shows management spans widening past 1:12 for two consecutive years.<span class="when">The killing signal: if it appears, the scenario is dead</span></div><span class="mark inf" title="Inferred">~</span></div>
+    <div class="row"><div class="said">A reproducible cost per accepted production change.<span class="when">Looked for in pricing pages, archives and studies</span></div><div class="did">Not found after looking. The read says so instead of estimating one.<span class="when">Lane 3, capability curve</span></div><span class="mark unk" title="Unknown">?</span></div>
+    <div class="cap">Every claim in the read carries one of three marks. <b>✓</b> a source, read and linked. <b>~</b> inferred from the record. <b>?</b> not found after looking. <a href="samples/2026-10-31-software-leadership-vs-physical-ai-career.pdf">Open the full read as a PDF</a>.</div>
   </div>
 </header>
 
@@ -207,7 +207,7 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:14px;border-top:1px soli
 
 <section id="views">
   <h2>What a finished read looks like</h2>
-  <p class="lead">One fixed layout for a field, one for a comparison, each enforced by a checker: numbered sections, a mark on every claim, probabilities as ranges, every scenario with dated confirming signals and one killing signal, sources by lane. The first full sample read will be published here when it is done.</p>
+  <p class="lead">One fixed layout for a field, one for a comparison, each enforced by a checker: numbered sections, a mark on every claim, probabilities as ranges, every scenario with dated confirming signals and one killing signal, sources by lane. The comparison below is a real read from 31 October 2026, with the reader section removed; the single-field view shows the layout until its first sample is done.</p>
   <div class="tabs" role="tablist" data-group="v">
     <button role="tab" aria-selected="true" data-v="field">One field</button>
     <button role="tab" aria-selected="false" data-v="compare">Comparison</button>
@@ -240,29 +240,24 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:14px;border-top:1px soli
   </div>
   <div class="view" id="v-compare">
     <article class="sheet">
-      <div class="dochead"><b>&lt;Field A&gt; against &lt;Field B&gt;: a field read</b><span>Read on D Month YYYY. Horizon N years</span></div>
-      <p class="legend">Fields: A = ...; B = .... Depth: equal. Public record only. No LinkedIn profile was opened. Layout only; the first sample is to follow.</p>
+      <div class="dochead"><b>Software engineering leadership as coding agents mature, against physical AI and robotics engineering: a field read</b><span>Read on 31 October 2026. Horizon 3 years</span></div>
+      <p class="legend">Fields: A = software engineering leadership in software companies of 50 to 500 people as coding agents mature; B = physical AI and robotics engineering. Depth: equal. Public record only. No LinkedIn profile was opened. 170 footnotes across seven lanes.</p>
       <h3>1. The answer in one paragraph</h3>
-      <h3>2. The criteria</h3>
-      <p class="note">Five to eight rows, the reader's own weights, written and dated before the lanes run.</p>
-      <h3>3. The fields today, side by side</h3>
-      <p class="note">3a to 3e: the same five tables as a single read, one column block per field. Where one side is thinner, the row says so.</p>
-      <h3>4. The base rates</h3>
-      <h3>5. Scenarios, per field</h3>
-      <h3>6. Roles and company types, side by side</h3>
+      <p>Field A is being reorganised, not emptied. The last three software shifts renamed and merged roles while employment grew <span class="m ok">cited</span>, and no historical series shows a thinner management layer <span class="m unk">unknown</span>. Agents accept more bounded changes while the quality and productivity evidence stays mixed <span class="m ok">cited</span>. Field B is earlier in its shift and its money is mostly defence: the six largest rounds since 2024 are Anduril, Helsing, Saronic, Shield AI and Quantum Systems <span class="m ok">cited</span>. The civilian slice offers a credible entry for a software leader through fleet reliability, but the ads want physical presence and travel <span class="m ok">cited</span>, and the base rate for the last autonomy wave is acquisition that keeps the engineers and removes the independent leadership mandate <span class="m ok">cited</span>. The decision turns on two criteria that can only be settled company by company: remote work and the no-defence filter <span class="m inf">inferred</span>.</p>
       <h3>7. The criteria table</h3>
       <div class="scroll"><table>
-        <thead><tr><th>Criterion</th><th>Field A</th><th>Field B</th><th>Which wins</th></tr></thead>
-        <tr><td>one row per criterion from section 2</td><td>marked, resting on a lane</td><td>marked, resting on a lane</td><td>a name, or "turns on &lt;signal&gt;"</td></tr>
+        <thead><tr><th>Criterion</th><th>Software leadership</th><th>Physical AI</th><th>Which wins</th></tr></thead>
+        <tr><td>Remote-first</td><td>From 100% remote to office three days <span class="m ok">cited</span></td><td>Travel up to 50%, client sites; best remote share found 10% <span class="m ok">cited</span></td><td>A</td></tr>
+        <tr><td>Ethical filter</td><td>Finance customers common; defence funding small <span class="m ok">cited</span></td><td>Six of ten largest rounds are defence; five sampled ads name government buyers <span class="m ok">cited</span></td><td>A at field level; B company by company</td></tr>
+        <tr><td>Stability, 3 years</td><td>Employment persisted through three shifts <span class="m ok">cited</span></td><td>Acquisition absorbs engineers, removes mandates <span class="m ok">cited</span></td><td>A</td></tr>
+        <tr><td>Option value</td><td>Keeps open-source and consulting open; the niche is being bundled <span class="m ok">cited</span></td><td>A scarce fleet-release story; narrow UK pool <span class="m inf">inferred</span></td><td>B, if civilian and it survives</td></tr>
+        <tr><td>Learning cost</td><td>Low <span class="m ok">cited</span></td><td>Moderate; fleet leads accept SRE backgrounds <span class="m ok">cited</span></td><td>A</td></tr>
       </table></div>
       <h3>8. Switching cost and option value</h3>
-      <p class="note">Cost of moving A to B. Cost of moving B to A. Option value kept by each. Sequencing.</p>
-      <h3>9. Where credible people disagree</h3>
-      <h3>10. What it means for the reader</h3>
-      <h3>11. Decision points, dated</h3>
-      <h3>12. Sources by lane and field</h3>
-      <div class="docfoot"><span>Field Read</span><a href="https://github.com/me2resh/field-read/blob/main/skills/field-read/references/outputs.md">The full specification</a><span>Skeleton B</span></div>
+      <p>Sequencing <span class="m inf">inferred</span>: the base rates favour entering physical AI after it consolidates, not before. The autonomous-vehicle wave rewarded the engineers who joined the acquirers, not the programmes that closed. The Machinery Regulation of January 2027 and the AI Act's product rules of August 2028 create the conformity and release-evidence roles that match a platform leader's profile.</p>
+      <div class="docfoot"><span>Field Read</span><a href="samples/2026-10-31-software-leadership-vs-physical-ai-career.pdf">Open the full read as a PDF</a><span>Excerpt, sections 1, 7 and 8</span></div>
     </article>
+  </div>
   </div>
 </section>
 
